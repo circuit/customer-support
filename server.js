@@ -29,11 +29,14 @@ const app = express();
 const circuit = require('./circuit');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const jsonfile = require('jsonfile');
 
 const port = process.env.PORT || 3100;
 const config = require('./config.json');
-const complaints = require('./complaints.json');
 const emitter = new EventEmitter();
+
+const db = './complaints.json';
+let complaints = jsonfile.readFileSync(db);
 
 let supportUserIds;
 
@@ -67,15 +70,6 @@ io.on('connection', async socket => {
       // Create group conversation
       let conv = await circuit.createConversation(supportUserIds, data.name);
 
-      // Post initial message which creates the thread for customer communication
-      let item = await circuit.sendMessage(conv.convId, {
-        subject: `*** New complaint: ${data.name}`,
-        context: `Name: ${data.name}<br>Email: <a mailto="${data.email}">${data.email}</a>`
-      });
-
-      // Post initial complaint message
-      circuit.sendMessage(conv.convId, data.content);
-
       // Create complaint in database
       let newComplaintId = complaints.length ? ++complaints[complaints.length - 1].complaintId : config.complaintIdStart;
       let newComplaint = {
@@ -86,9 +80,30 @@ io.on('connection', async socket => {
           email: data.email
         }
       }
-      complaints.push(newComplaint);
 
-      // Tell client to edirect to complaint page
+      // Post initial message which creates the thread for customer communication
+      await circuit.sendMessage(conv.convId, {
+        subject: `New complaint: ${newComplaintId}`,
+        content: `Name: ${data.name}<br>Email: <a href="${data.email}">${data.email}</a>`
+      });
+
+      // Post initial complaint message. This will become the communication thread with the customer
+      const customerThread = await circuit.sendMessage(conv.convId, {
+        subject: '*** CUSTOMER COMMUNICATION THREAD ***',
+        content: data.message
+      });
+
+      // Save threadId in db. Subsequent messages to/from customer go into this thread
+      newComplaint.thread = customerThread.itemId;
+
+      // TODO: don't read each time and write whole file
+      complaints = jsonfile.readFileSync(db);
+      complaints.push(newComplaint)
+      jsonfile.writeFile(db, complaints, {spaces: 2}, err =>
+        err && console.error('Error updating the complaint DB', err)
+      );
+
+      // Tell client to redirect to complaint page
       socket.emit('complaint-created', newComplaintId);
     } catch (err) {
       console.error('Error creating new complaint', err);

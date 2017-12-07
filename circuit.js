@@ -37,30 +37,26 @@ let emitter;
  * @param {Object} events Event emitter
  */
 function init (events) {
-  return Promise.resolve();
-
-    emitter = events;
-    client = new Circuit.Client(config.bot);
-    return client.logon()
-      .then(setupListeners);
+  emitter = events;
+  client = new Circuit.Client(config.bot);
+  return client.logon()
+    .then(setupListeners);
 }
 
 /**
  * Create a conversation
  * @param {Object}
  */
-function createConversation() {
-  return Promise.resolve({convId: '3452354235'})
+function createConversation(userIds, name) {
+    return client.createGroupConversation(userIds, `Cust: ${name}`);
 }
 
 function getUsersByEmail(emails) {
-  return Promise.resolve(['213421342134']);
   return client.getUsersByEmail(emails)
 }
 
-function sendMessage(obj) {
-  return Promise.resolve({});
-  return client.addTextItem(obj)
+function sendMessage(convId, obj) {
+  return client.addTextItem(convId, obj)
 }
 
 /**
