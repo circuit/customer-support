@@ -1,0 +1,18 @@
+{
+	"bot": {
+	  "domain": "circuitsandbox.net",
+		"client_id": "851763b2fe7a4aaaa33a2de397d92170",
+		"client_secret": "97cedbbf3954434d99ef0acf54bf6df9"
+	},
+  "supportUsers": [
+    "etc-01@etcdev.com",
+    "etc-02@etcdev.com"
+  ],
+  "topics": [
+    "Washer",
+    "Dryer",
+    "Fridge",
+    "Dishwasher"
+  ],
+  "complaintIdStart": 100
+}

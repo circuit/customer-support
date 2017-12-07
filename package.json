@@ -1,0 +1,27 @@
+{
+  "name": "customer-support",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/circuit/customer-support.git"
+  },
+  "author": "Roger Urscheler <roger.urscheler@unify.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/circuit/customer-support/issues"
+  },
+  "homepage": "https://github.com/circuit/customer-support#readme",
+  "dependencies": {
+    "circuit-sdk": "^1.2.2200",
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4",
+    "hyperhtml": "^1.12.2",
+    "vue": "^2.5.9"
+  }
+}
