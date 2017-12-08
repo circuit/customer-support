@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', event => {
         <div>Name: <input required type="text" name="name" onchange="${EventListener.handleEvent}"/></div>
         <div>Email: <input required type="email" name="email" onchange="${EventListener.handleEvent}"/></div>
         <div>Message: <textarea required rows="5" type="text" name="message" onchange="${EventListener.handleEvent}"></textarea></div>
-        <button onclick="${send}">Submit</button>
+        <button onclick="${createComplaint}">Submit</button>
       </div>`;
   }
 
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', event => {
     hyperHTML.bind(app)`
       <div class="container">
         <h1>Customer Complaint</h1>
-        <p>Reference Nr. ${data.complaint.complaintId}<br>
+        <p>Reference Nr. <span id="complaintId">${data.complaint.complaintId}</span><br>
         Customer name: ${data.complaint.customer.name}<br>
         Customer email: ${data.complaint.customer.email}</p>
         ${data.messages.map(m =>
@@ -35,19 +35,28 @@ document.addEventListener('DOMContentLoaded', event => {
           <div class="date">${new Date(m.timestamp)}</div>
         </div>`)}
         <h4>Post a message:</h4>
-        <textarea rows="3"></textarea>`;
+        <textarea rows="3" name="message2" onchange="${EventListener.handleEvent}"></textarea>
+        <button onclick="${newMessage}">Submit</button>`;
   }
 
-  function send() {
-    console.log(`Submit message for ${model.name}`, model);
+  function createComplaint() {
+    console.log(`Submit new complaint for ${model.name}`, model);
     socket.emit('new-complaint', model);
   }
 
+  function newMessage() {
+    console.log(`Submit message for complaint ${model.name}`, model);
+    socket.emit('new-message', {
+      complaintId: Number(document.getElementById('complaintId').innerText),
+      message: model.message2
+    });
+  }
+
   socket.on('disconnect', () => console.error('Socket has disconnected'));
-
   socket.on('complaint-created', id => location.href = '/?id=' + id);
-
   socket.on('get-complaint-response', data => renderComplaint(data));
+  socket.on('update', data => renderComplaint(data));
+  socket.on('new-message-response', () => location.reload());
 
   if (location.search) {
     // This is a /?id=<complaintId> page, render a complaint

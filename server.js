@@ -1,25 +1,3 @@
-/*
-    Copyright (c) 2017 Unify Inc.
-
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the "Software"),
-    to deal in the Software without restriction, including without limitation
-    the rights to use, copy, modify, merge, publish, distribute, sublicense,
-    and/or sell copies of the Software, and to permit persons to whom the Software
-    is furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
-    OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
 /* jslint node: true */
 'use strict';
 
@@ -27,6 +5,7 @@ const EventEmitter = require('events');
 const express = require('express');
 const app = express();
 const circuit = require('./circuit');
+const mailer = require('./mailer');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const jsonfile = require('jsonfile');
@@ -40,30 +19,24 @@ let complaints = jsonfile.readFileSync(db);
 
 let supportUserIds;
 
+// Serve pages
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules'));
 
+// Initialize Circuit API
 circuit.init(emitter)
   .then(() => circuit.getUsersByEmail(config.supportUsers))
-  .then(users => supportUserIds = users.map(user => user.userId))
+  .then(users =>
+    supportUserIds = users.map(user => user.userId))
   .catch(console.error);
 
-/**
- * Circuit module events
- */
-emitter.on('msg-to-customer', _ => {
-  console.log('send msg-to-customer');
-    //io.in('operator').emit('patients', patients.map(p => {return p.info;}));
-});
 
-/**
- * Client socket.io connections
- */
+// Client socket.io connections
 io.on('connection', async socket => {
   let query = socket.handshake.query;
   console.log('socket connected', socket.id);
 
-  // New complaint from form
+  // New complaint from complaint form
   socket.on('new-complaint', async data => {
     console.log('new-complaint', data);
     try {
@@ -96,20 +69,22 @@ io.on('connection', async socket => {
       // Save threadId in db. Subsequent messages to/from customer go into this thread
       newComplaint.thread = customerThread.itemId;
 
-      // TODO: don't read each time and write whole file
+      // TODO: don't read write whole file each time and
       complaints = jsonfile.readFileSync(db);
       complaints.push(newComplaint)
-      jsonfile.writeFile(db, complaints, {spaces: 2}, err =>
-        err && console.error('Error updating the complaint database', err)
-      );
-
-      // Tell client to redirect to complaint page
+      jsonfile.writeFile(db, complaints, {spaces: 2}, err => {
+        if (err) {
+          console.error('Error updating the complaint database', err);
+          return;
+        }
+      });
       socket.emit('complaint-created', newComplaintId);
     } catch (err) {
       console.error('Error creating new complaint', err);
     }
   });
 
+  // Get complaint from DB and return to browser
   socket.on('get-complaint', async id => {
     const complaint = complaints.find(c => c.complaintId === id);
     if (!complaint) {
@@ -122,6 +97,53 @@ io.on('connection', async socket => {
       messages: messages
     });
   });
+
+  // New message from customer. Post it in public communication thread
+  socket.on('new-message', async data => {
+    const complaint = complaints.find(c => c.complaintId === data.complaintId);
+    if (!complaint) {
+      console.error(`No complaint found in DB for complaint: ${data.complaintId}`);
+      return;
+    }
+    await circuit.sendMessage(complaint.convId, {
+      parentId: complaint.thread,
+      content: data.message
+    });
+    socket.emit('new-message-response');
+  });
+
+  // Look for messages from back office support etc., i.e. for messages in
+  // the public communication thread not sent by the customer (bot user)
+  // Then update the UI (in case its page it open) and send email to customer.
+  emitter.on('message-received', data => {
+    // timeout is a workaround so that json file is saved first.
+    // we should change this to keep the DB in memory and only
+    // saved it periodically and on shutdown
+    setTimeout(async () => {
+      const complaint = complaints.find(c => c.convId === data.convId);
+      if (!complaint) {
+        console.error(`No complaint found in DB for convId: ${data.convId}`);
+        return;
+      }
+      if (complaint.thread !== data.thread) {
+        console.error('Message on a internal thread. Skip it.');
+        return;
+      }
+
+      // TODO: don't get all the messages again. Instead just send an event
+      // to the UI with the new message and append the new message
+      const messages = await circuit.getMessages(complaint.convId, complaint.thread);
+      socket.emit('update', {
+        complaint: complaint,
+        messages: messages
+      });
+
+      // Send email to customer
+      //mailer.send(complaint.email, data.message);
+    }, 500);
+  });
+
 });
+
 
 server.listen(port, _ => console.log(`Server listening at port ${port}`));

@@ -16,6 +16,7 @@ Customer complaint system using Circuit for communication
 * Allow customer to upload files/images and post them to conversation
 * Set conversation avatar (missing in SDK)
 * Set a 'complaints' label on conversation
+* Support clustered messages
 
 ## Run
 ```bash

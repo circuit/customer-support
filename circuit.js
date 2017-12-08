@@ -1,25 +1,3 @@
-/*
-    Copyright (c) 2017 Unify Inc.
-
-    Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated documentation files (the "Software"),
-    to deal in the Software without restriction, including without limitation
-    the rights to use, copy, modify, merge, publish, distribute, sublicense,
-    and/or sell copies of the Software, and to permit persons to whom the Software
-    is furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
-    OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
 /* jslint node: true */
 'use strict';
 
@@ -33,10 +11,6 @@ let appUserId;
 //Circuit.setLogger(console);
 //Circuit.logger.setLevel(Circuit.Enums.LogLevel.Debug);
 
-/**
- * Initialize
- * @param {Object} events Event emitter
- */
 function init (events) {
   emitter = events;
   client = new Circuit.Client(config.bot);
@@ -45,10 +19,6 @@ function init (events) {
     .then(setupListeners);
 }
 
-/**
- * Create a conversation
- * @param {Object}
- */
 function createConversation(userIds, name) {
     return client.createGroupConversation(userIds, `Cust: ${name}`);
 }
@@ -78,10 +48,17 @@ function getMessages(convId, threadId) {
  */
 function setupListeners() {
     client.addEventListener('itemAdded', evt => {
-      // Todo: look for messages for the public communication thread by
-      // looking at the convId and threadId, and also if the sender is
-      // not the bot
+      // Raise text messages for further processing
       console.log(evt);
+      if (!evt.item.text) {
+        // not a text message
+        return;
+      }
+      emitter.emit('message-received', {
+        convId: evt.item.convId,
+        thread: evt.item.parentItemId || evt.item.itemId,
+        message: evt.item.text.content
+      });
     });
 }
 
