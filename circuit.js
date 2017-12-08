@@ -28,6 +28,7 @@ const config = require('./config.json');
 
 let client;
 let emitter;
+let appUserId;
 
 //Circuit.setLogger(console);
 //Circuit.logger.setLevel(Circuit.Enums.LogLevel.Debug);
@@ -40,6 +41,7 @@ function init (events) {
   emitter = events;
   client = new Circuit.Client(config.bot);
   return client.logon()
+    .then(user => appUserId = user.userId)
     .then(setupListeners);
 }
 
@@ -59,11 +61,26 @@ function sendMessage(convId, obj) {
   return client.addTextItem(convId, obj)
 }
 
+function getMessages(convId, threadId) {
+  return client.getItemsByThread(convId, threadId, { number: -1 })
+    .then(res => res.items.map(m => {
+        return {
+          content: m.text.content,
+          fromCustomer: m.creatorId === appUserId,
+          timestamp: m.creationTime
+        }
+      })
+    );
+}
+
 /**
  * Setup the listeners
  */
 function setupListeners() {
     client.addEventListener('itemAdded', evt => {
+      // Todo: look for messages for the public communication thread by
+      // looking at the convId and threadId, and also if the sender is
+      // not the bot
       console.log(evt);
     });
 }
@@ -72,5 +89,6 @@ module.exports = {
     init,
     createConversation,
     sendMessage,
+    getMessages,
     getUsersByEmail
 }

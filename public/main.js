@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', event => {
     handleEvent: e => model[e.target.name] = e.target.value
   }
 
-  // Render whole page in one shot since its so small
   function render() {
     hyperHTML.bind(app)`
       <div class="container">
@@ -27,13 +26,16 @@ document.addEventListener('DOMContentLoaded', event => {
     hyperHTML.bind(app)`
       <div class="container">
         <h1>Customer Complaint</h1>
-        <p>Reference Nr. ${data.id}</p>
-        <p>Customer name: ${data.name}</p>
-        <p>Customer email: ${data.email}</p>
-        <ul>
-          <li>todo messages</li>
-        </ul>
-      </div>`;
+        <p>Reference Nr. ${data.complaint.complaintId}<br>
+        Customer name: ${data.complaint.customer.name}<br>
+        Customer email: ${data.complaint.customer.email}</p>
+        ${data.messages.map(m =>
+        `<div class="msg msg-${m.fromCustomer ? 'customer' : 'company'}">
+          <div class="text">${m.content}</div>
+          <div class="date">${new Date(m.timestamp)}</div>
+        </div>`)}
+        <h4>Post a message:</h4>
+        <textarea rows="3"></textarea>`;
   }
 
   function send() {
@@ -45,17 +47,12 @@ document.addEventListener('DOMContentLoaded', event => {
 
   socket.on('complaint-created', id => location.href = '/?id=' + id);
 
-  socket.on('get-complaint-response', data => {
-    renderComplaint(data);
-  });
+  socket.on('get-complaint-response', data => renderComplaint(data));
 
-  // Check if this is a /?id=<complaintId> page, and if so render a cmplaint
   if (location.search) {
-    // Lookup public communication thread from conversation in circuit and
-    // display on page together with an input field for customer to post
-    // more information.
-    const id = location.search.indexOf('id=') + 3;
-    socket.emit('get-complaint', id);
+    // This is a /?id=<complaintId> page, render a complaint
+    const id = location.search.substring(location.search.indexOf('id=') + 3)
+    socket.emit('get-complaint', Number(id));
   } else {
     // Render main form
     render();

@@ -100,7 +100,7 @@ io.on('connection', async socket => {
       complaints = jsonfile.readFileSync(db);
       complaints.push(newComplaint)
       jsonfile.writeFile(db, complaints, {spaces: 2}, err =>
-        err && console.error('Error updating the complaint DB', err)
+        err && console.error('Error updating the complaint database', err)
       );
 
       // Tell client to redirect to complaint page
@@ -108,6 +108,19 @@ io.on('connection', async socket => {
     } catch (err) {
       console.error('Error creating new complaint', err);
     }
+  });
+
+  socket.on('get-complaint', async id => {
+    const complaint = complaints.find(c => c.complaintId === id);
+    if (!complaint) {
+      console.error(`No complaint found in DB for complaint: ${id}`);
+      return;
+    }
+    const messages = await circuit.getMessages(complaint.convId, complaint.thread);
+    socket.emit('get-complaint-response', {
+      complaint: complaint,
+      messages: messages
+    });
   });
 });
 
