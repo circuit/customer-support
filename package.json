@@ -18,10 +18,12 @@
   },
   "homepage": "https://github.com/circuit/customer-support#readme",
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "circuit-sdk": "^1.2.2200",
     "express": "^4.16.2",
     "hyperhtml": "^1.12.5",
     "jsonfile": "^4.0.0",
+    "moment": "^2.19.3",
     "nodemailer": "^4.4.1",
     "socket.io": "^2.0.4",
     "vue": "^2.5.9"

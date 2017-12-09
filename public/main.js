@@ -14,56 +14,38 @@ document.addEventListener('DOMContentLoaded', event => {
   function render() {
     hyperHTML.bind(app)`
       <div class="container">
-        <h1>Customer Complaint Form</h1>
-        <div>Name: <input required type="text" name="name" onchange="${EventListener.handleEvent}"/></div>
-        <div>Email: <input required type="email" name="email" onchange="${EventListener.handleEvent}"/></div>
-        <div>Message: <textarea required rows="5" type="text" name="message" onchange="${EventListener.handleEvent}"></textarea></div>
-        <button onclick="${createComplaint}">Submit</button>
+        <h2>Customer Complaint Form</h2>
+        <form>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input required type="text" class="form-control" id="name" name="name" onchange="${EventListener.handleEvent}">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input required type="email" class="form-control" id="email" name="email" onchange="${EventListener.handleEvent}">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea class="form-control" required rows="5" type="text" id="message" name="message" onchange="${EventListener.handleEvent}"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" onclick="${createComplaint}">Submit</button>
+        </form>
       </div>`;
   }
 
-  function renderComplaint(data) {
-    hyperHTML.bind(app)`
-      <div class="container">
-        <h1>Customer Complaint</h1>
-        <p>Reference Nr. <span id="complaintId">${data.complaint.complaintId}</span><br>
-        Customer name: ${data.complaint.customer.name}<br>
-        Customer email: ${data.complaint.customer.email}</p>
-        ${data.messages.map(m =>
-        `<div class="msg msg-${m.fromCustomer ? 'customer' : 'company'}">
-          <div class="text">${m.content}</div>
-          <div class="date">${new Date(m.timestamp)}</div>
-        </div>`)}
-        <h4>Post a message:</h4>
-        <textarea rows="3" name="message2" onchange="${EventListener.handleEvent}"></textarea>
-        <button onclick="${newMessage}">Submit</button>`;
-  }
-
-  function createComplaint() {
+  function createComplaint(e) {
+    e.preventDefault();
     console.log(`Submit new complaint for ${model.name}`, model);
     socket.emit('new-complaint', model);
   }
 
-  function newMessage() {
-    console.log(`Submit message for complaint ${model.name}`, model);
-    socket.emit('new-message', {
-      complaintId: Number(document.getElementById('complaintId').innerText),
-      message: model.message2
-    });
-  }
-
   socket.on('disconnect', () => console.error('Socket has disconnected'));
-  socket.on('complaint-created', id => location.href = '/?id=' + id);
-  socket.on('get-complaint-response', data => renderComplaint(data));
-  socket.on('update', data => renderComplaint(data));
-  socket.on('new-message-response', () => location.reload());
 
-  if (location.search) {
-    // This is a /?id=<complaintId> page, render a complaint
-    const id = location.search.substring(location.search.indexOf('id=') + 3)
-    socket.emit('get-complaint', Number(id));
-  } else {
-    // Render main form
-    render();
-  }
+  // New complaint created, navigate to its page
+  socket.on('complaint-created', id =>
+    location.href = '/complaint?id=' + id);
+
+  socket.on('update', data => renderComplaint(data));
+
+  render();
 });

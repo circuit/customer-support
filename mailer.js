@@ -22,11 +22,11 @@ var transporter = nodemailer.createTransport("SMTP",{
 
 function send(to, msg) {
   var mail = {
-      from: 'Circuit Customer Support <no-reply@circuit.com>',
-      to: 'rurscheler@gmail.com',
-      subject: "Send Email Using Node.js",
-      text: "Node.js New world for me",
-      html: "<b>Node.js New world for me</b>"
+      from: 'circuitfinance01@gmail.com',
+      to: to,
+      //subject: "Send Email Using Node.js",
+      //text: "Node.js New world for me",
+      html: msg
   }
 
   transporter.sendMail(mail, (error, response) => {

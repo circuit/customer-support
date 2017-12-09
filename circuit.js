@@ -32,15 +32,26 @@ function sendMessage(convId, obj) {
 }
 
 function getMessages(convId, threadId) {
-  return client.getItemsByThread(convId, threadId, { number: -1 })
-    .then(res => res.items.map(m => {
-        return {
-          content: m.text.content,
-          fromCustomer: m.creatorId === appUserId,
-          timestamp: m.creationTime
-        }
+  // getItemsByThread does not include the parent, so get it first
+  // or does it???
+  return new Promise((resolve, reject) => {
+    let res = [];
+    client.getItemById(threadId)
+  //    .then(item => res.push(item))
+      .then(() => client.getItemsByThread(convId, threadId, { number: -1 }))
+      .then(resp => res.push(...resp.items))
+      .then(() => {
+        res = res.map(m => {
+          return {
+            content: m.text.content,
+            fromCustomer: m.creatorId === appUserId,
+            timestamp: m.creationTime
+          }
+        });
+        resolve(res);
       })
-    );
+      .catch(reject);
+  });
 }
 
 /**
@@ -57,7 +68,8 @@ function setupListeners() {
       emitter.emit('message-received', {
         convId: evt.item.convId,
         thread: evt.item.parentItemId || evt.item.itemId,
-        message: evt.item.text.content
+        message: evt.item.text.content,
+        fromCustomer: evt.item.creatorId === appUserId
       });
     });
 }

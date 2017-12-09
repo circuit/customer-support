@@ -15,7 +15,7 @@ const config = require('./config.json');
 const emitter = new EventEmitter();
 
 const db = './complaints.json';
-let complaints = jsonfile.readFileSync(db);
+const complaints = jsonfile.readFileSync(db);
 
 let supportUserIds;
 
@@ -36,7 +36,7 @@ io.on('connection', async socket => {
   let query = socket.handshake.query;
   console.log('socket connected', socket.id);
 
-  // New complaint from complaint form
+  // New complaint from form
   socket.on('new-complaint', async data => {
     console.log('new-complaint', data);
     try {
@@ -44,7 +44,7 @@ io.on('connection', async socket => {
       let conv = await circuit.createConversation(supportUserIds, data.name);
 
       // Create complaint in database
-      let newComplaintId = complaints.length ? ++complaints[complaints.length - 1].complaintId : config.complaintIdStart;
+      let newComplaintId = complaints.length ? complaints[complaints.length - 1].complaintId + 1 : config.complaintIdStart;
       let newComplaint = {
         convId: conv.convId,
         complaintId: newComplaintId,
@@ -68,9 +68,6 @@ io.on('connection', async socket => {
 
       // Save threadId in db. Subsequent messages to/from customer go into this thread
       newComplaint.thread = customerThread.itemId;
-
-      // TODO: don't read write whole file each time and
-      complaints = jsonfile.readFileSync(db);
       complaints.push(newComplaint)
       jsonfile.writeFile(db, complaints, {spaces: 2}, err => {
         if (err) {
@@ -115,32 +112,29 @@ io.on('connection', async socket => {
   // Look for messages from back office support etc., i.e. for messages in
   // the public communication thread not sent by the customer (bot user)
   // Then update the UI (in case its page it open) and send email to customer.
-  emitter.on('message-received', data => {
-    // timeout is a workaround so that json file is saved first.
-    // we should change this to keep the DB in memory and only
-    // saved it periodically and on shutdown
-    setTimeout(async () => {
-      const complaint = complaints.find(c => c.convId === data.convId);
-      if (!complaint) {
-        console.error(`No complaint found in DB for convId: ${data.convId}`);
-        return;
-      }
-      if (complaint.thread !== data.thread) {
-        console.error('Message on a internal thread. Skip it.');
-        return;
-      }
+  emitter.on('message-received', async data => {
+    const complaint = complaints.find(c => c.convId === data.convId);
+    if (!complaint) {
+      console.error(`No complaint found in DB for convId: ${data.convId}`);
+      return;
+    }
+    if (complaint.thread !== data.thread) {
+      console.error('Message on a internal thread. Skip it.');
+      return;
+    }
 
-      // TODO: don't get all the messages again. Instead just send an event
-      // to the UI with the new message and append the new message
-      const messages = await circuit.getMessages(complaint.convId, complaint.thread);
-      socket.emit('update', {
-        complaint: complaint,
-        messages: messages
-      });
+    if (data.fromCustomer) {
+      // Complaint page is already updated locally in browser
+      // Might want to send an email to customer letting him/her know
+      // that reply was recevied.
+      return;
+    }
 
-      // Send email to customer
-      //mailer.send(complaint.email, data.message);
-    }, 500);
+    // Send an event to the UI with the new message and append the new message
+    socket.emit('new-support-message', data);
+
+    // Send email to customer
+    mailer.send(complaint.email, data.message);
   });
 
 });
