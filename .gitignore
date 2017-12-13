@@ -1,5 +1,5 @@
 # Node build artifacts
-#node_modules
+node_modules
 npm-debug.log
 
 # Local development
@@ -9,3 +9,4 @@ npm-debug.log
 .vscode
 
 config.json
+complaints.json

@@ -18,6 +18,9 @@ Customer complaint system using Circuit for communication
 * Set a 'complaints' label on conversation
 * Support clustered messages
 
+## Requirements
+* Node.js 8+
+
 ## Install
 ```bash
   git clone https://github.com/circuit/customer-support.git
