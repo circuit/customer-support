@@ -7,3 +7,5 @@ npm-debug.log
 *.dev
 .DS_Store
 .vscode
+
+config.json
