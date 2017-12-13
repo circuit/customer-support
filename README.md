@@ -18,8 +18,15 @@ Customer complaint system using Circuit for communication
 * Set a 'complaints' label on conversation
 * Support clustered messages
 
+## Install
+```bash
+  git clone https://github.com/circuit/customer-support.git
+  // Rename config.json.template to config.json and add your credentials
+  // If you do not have app credentials, get them via form at https://circuit.github.io/oauth
+  npm install
+```
+
 ## Run
 ```bash
-  npm install
   npm start
 ```
