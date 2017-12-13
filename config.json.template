@@ -1,7 +1,36 @@
 {
+  "host": "http://localhost:3100",
 	"bot": {
 	  "domain": "circuitsandbox.net",
 		"client_id": "<client_id>",
 		"client_secret": "<client_secret>"
-	}
+	},
+  "email": {
+    "nodemailer": {
+      "host": "smtp.gmail.com",
+      "port": 465,
+      "secure": true,
+      "auth": {
+          "type": "OAuth2",
+          "user": "circuitfinance01@gmail.com",
+          "clientId": "...",
+          "clientSecret": "...",
+          "refreshToken": "...",
+          "accessToken": "...",
+          "expires": 1513204865105
+      }
+    },
+    "sender": "no-reply@customer-support.com"
+},
+  "supportUsers": [
+    "<circuit support user 1>",
+		"<circuit support user 2>"
+  ],
+  "topics": [
+    "Washer",
+    "Dryer",
+    "Fridge",
+    "Dishwasher"
+  ],
+  "complaintIdStart": 100
 }

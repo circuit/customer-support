@@ -80,6 +80,10 @@ io.on('connection', async socket => {
         }
       });
       socket.emit('complaint-created', newComplaintId);
+
+      // Send email to customer
+      mailer.sendInitialMsg(newComplaint);
+
     } catch (err) {
       console.error('Error creating new complaint', err);
     }
@@ -137,8 +141,8 @@ io.on('connection', async socket => {
     // Send an event to the UI with the new message and append the new message
     socket.emit('new-support-message', data);
 
-    // Send email to customer
-    mailer.send(complaint.email, data.message);
+    // Send email to customer notifying of update
+    mailer.sendUpdate(complaint, data.message, complaint.complaintId);
   });
 
 });

@@ -1,43 +1,38 @@
-
 const nodemailer = require('nodemailer');
+const config = require('./config.json');
 
-// Use Smtp Protocol to send Email
-const transporter = nodemailer.createTransport('smtps://circuitfinance01%40gmail.com:GoCircuit!@smtp.gmail.com');
+let smtpTransport = nodemailer.createTransport(config.email.nodemailer);
 
-/*
-var transporter = nodemailer.createTransport("SMTP",{
-  host: "smtp.gmail.com",
-  secureConnection: false,
-  port: 587,
-  requiresAuth: true,
-  domains: ["gmail.com", "googlemail.com"],
-  auth: {
-    user: "circuitfinance01@gmail.com",
-    pass: "GoCircuit!"
-  }
-});
-*/
-
-
-
-function send(to, msg) {
-  var mail = {
-      from: 'circuitfinance01@gmail.com',
-      to: to,
-      //subject: "Send Email Using Node.js",
-      //text: "Node.js New world for me",
-      html: msg
-  }
-
-  transporter.sendMail(mail, (error, response) => {
-      if (error) {
-          console.log(error);
-          return;
-      }
-      console.log('Email sent to ' + mail.to);
+function sendInitialMsg(complaint) {
+  send({
+      from: config.email.sender, // This will not work with gmail. The email from auth will be used.
+      to: complaint.customer.email,
+      subject: 'Customer Complaint accepted',
+      html: `Hi ${complaint.customer.name},<br><br>Thank you for contacting us. We will get back to you within 24 hours.<br><br>Company xyz`
   });
 }
 
+function sendUpdate(complaint, msg, complaintId) {
+  send({
+      from: config.email.sender, // This will not work with gmail. The email from auth will be used.
+      to: complaint.customer.email,
+      subject: 'Customer Support has replied',
+      html: `Hi ${complaint.customer.name},<br><br>Your complaint has been updated.<br><br><i>${msg}</i><br><br>You can also view the whole conversation <a href=\"${config.host}/complaint/?id=${complaintId}\">here</a>.<br><br>Company xyz`
+  });
+}
+
+function send(mail) {
+  smtpTransport.sendMail(mail, (error, response) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent to ' + mail.to);
+      }
+  });
+  smtpTransport.close();
+}
+
 module.exports = {
-  send
+  sendInitialMsg,
+  sendUpdate
 }
