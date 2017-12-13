@@ -1,6 +1,7 @@
 /* jslint node: true */
 'use strict';
 
+const fs = require('fs');
 const EventEmitter = require('events');
 const express = require('express');
 const app = express();
@@ -15,7 +16,6 @@ const config = require('./config.json');
 const emitter = new EventEmitter();
 
 const db = './complaints.json';
-const complaints = jsonfile.readFileSync(db);
 
 let supportUserIds;
 
@@ -23,13 +23,17 @@ let supportUserIds;
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules'));
 
+// Create complaints.json file if not exits
+const exists = fs.existsSync(db);
+!exists && fs.writeFileSync(db, '[]');
+const complaints = jsonfile.readFileSync(db);
+
 // Initialize Circuit API
 circuit.init(emitter)
   .then(() => circuit.getUsersByEmail(config.supportUsers))
   .then(users =>
     supportUserIds = users.map(user => user.userId))
   .catch(console.error);
-
 
 // Client socket.io connections
 io.on('connection', async socket => {
