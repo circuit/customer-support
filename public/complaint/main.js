@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', event => {
 
   function renderComplaint() {
     hyperHTML.bind(app)`
-      <div class="container" id = "outter"><div id = "inner">
+      <div class="container" id = "inner">
         <h2>Customer Complaint</h2>
         <p>Reference Nr. <span id="complaintId">${model.complaint.complaintId}</span><br>
         Customer name: ${model.complaint.customer.name}<br>
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', event => {
         <h5>Post new message:</h5>
         <textarea cols="60" rows="3" id = "txt" name="message" onchange="${EventListener.handleEvent}" placeholder="Enter message"></textarea>
         <div><button type="button" class="btn btn-primary" onclick="${newMessage}">Submit</button></div>
-      </div></div>`;
+      </div>`;
   }
 
   function newMessage() {

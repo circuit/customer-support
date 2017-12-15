@@ -57,7 +57,6 @@ io.on('connection', async socket => {
           name: data.name,
           email: data.email,
           topic: data.topic,
-          other: data.other
         }
       }
 

@@ -14,8 +14,15 @@ document.addEventListener('DOMContentLoaded', event => {
   function render() {
     hyperHTML.bind(app)`
     
-      <div class="container">
-        <h2>Customer Complaint Form</h2>
+      <div class="jumbotron" id="formHead">
+        <h1>Customer Complaint Form</h1> 
+        <p>Please fill out your customer information below we wll as about your issue.</p> 
+      </div>
+
+
+
+      <div class="container" id = "inner">
+        
         <form>
           <div class="form-group">
             <label for="name">Name</label>
@@ -25,10 +32,6 @@ document.addEventListener('DOMContentLoaded', event => {
             <label for="email">Email</label>
             <input required type="email" class="form-control" id="email" name="email" onchange="${EventListener.handleEvent}">
           </div>
-          <div class="form-group">
-          <label for="email">Other</label>
-          <input required type="other" class="form-control" id="other" name="other" onchange="${EventListener.handleEvent}">
-        </div>
           <div class="form-group">
            <label for="sel1">Select an Issue:</label>
             <select class="form-control" id="topic" name ="topic" onchange="${EventListener.handleEvent}">

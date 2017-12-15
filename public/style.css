@@ -1,14 +1,14 @@
 
-#outter{
-   width: 100%;
-   background-color: F0F0F0;
-}
 #inner{
-    width: 70%;
-    padding: 5%;
+    width: 50%;
+    padding: 0;
     text-align: left;
     word-wrap: break-word;
     font-size: 24px;
+    background-color: white;
+    align-self: center;
+    margin: auto;
+
 
 }
 
@@ -26,4 +26,9 @@
 }
 .textC{
     background-color: #F0F0F0;
+}
+#formHead{
+    background-color: #E0E0E0;
+    text-align: center;
+    border: 3px solid green;
 }

@@ -74,6 +74,13 @@ function setupListeners() {
     });
 }
 
+Circuit.Injectors.itemInjector = function (item) {
+  if (item.type === 'TEXT') {
+    // Replacing br and hr tags with a space
+    item.text.content = item.text.content.replace(/<(\/li|hr[\/]?)>/gi, '<br>');
+  }
+};
+
 module.exports = {
     init,
     createConversation,
