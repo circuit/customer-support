@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', event => {
 
   function render() {
     hyperHTML.bind(app)`
+    
       <div class="container">
         <h2>Customer Complaint Form</h2>
         <form>
@@ -25,11 +26,29 @@ document.addEventListener('DOMContentLoaded', event => {
             <input required type="email" class="form-control" id="email" name="email" onchange="${EventListener.handleEvent}">
           </div>
           <div class="form-group">
+          <label for="email">Other</label>
+          <input required type="other" class="form-control" id="other" name="other" onchange="${EventListener.handleEvent}">
+        </div>
+          <div class="form-group">
+           <label for="sel1">Select an Issue:</label>
+            <select class="form-control" id="topic" name ="topic" onchange="${EventListener.handleEvent}">
+              <option>Select</option>
+              <option value = "Washing Machine">Washing Machine</option>
+              <option value = Dryer>Dryer</option>
+              <option value = Fridge>Fridge</option>
+              <option value = Dishwasher>Dishwasher</option>
+              <option value = Misc>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="message">Message</label>
-            <textarea class="form-control" required rows="5" type="text" id="message" name="message" onchange="${EventListener.handleEvent}"></textarea>
+            <textarea class="form-control" required rows="5" placeholder= "Please provide any relevant information here..." type="text" id="message" name="message" onchange="${EventListener.handleEvent}"></textarea>
           </div>
           <button type="submit" class="btn btn-primary" onclick="${createComplaint}">Submit</button>
+
         </form>
+
+
       </div>`;
   }
 

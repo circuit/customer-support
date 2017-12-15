@@ -47,6 +47,7 @@ io.on('connection', async socket => {
       // Create group conversation
       let conv = await circuit.createConversation(supportUserIds, data.name);
 
+      console.log('ewruiwhriewurhiweurhiweurwerihweiruhewuirhweiurhweiurhweiuh'+data.topic);
       // Create complaint in database
       let newComplaintId = complaints.length ? complaints[complaints.length - 1].complaintId + 1 : config.complaintIdStart;
       let newComplaint = {
@@ -54,14 +55,16 @@ io.on('connection', async socket => {
         complaintId: newComplaintId,
         customer: {
           name: data.name,
-          email: data.email
+          email: data.email,
+          topic: data.topic,
+          other: data.other
         }
       }
 
       // Post initial message which creates the thread for customer communication
       await circuit.sendMessage(conv.convId, {
         subject: `New complaint: ${newComplaintId}`,
-        content: `Name: ${data.name}<br>Email: <a href="${data.email}">${data.email}</a>`
+        content: `Name: ${data.name}<br>Email: <a href="${data.email}">${data.email}</a><br>Topic: ${data.topic}<br> Other:${data.other}`
       });
 
       // Post initial complaint message. This will become the communication thread with the customer
@@ -99,7 +102,7 @@ io.on('connection', async socket => {
     const messages = await circuit.getMessages(complaint.convId, complaint.thread);
     socket.emit('get-complaint-response', {
       complaint: complaint,
-      messages: messages
+      messages: messages,
     });
   });
 

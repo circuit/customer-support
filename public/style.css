@@ -1,0 +1,29 @@
+
+#outter{
+   width: 100%;
+   background-color: F0F0F0;
+}
+#inner{
+    width: 70%;
+    padding: 5%;
+    text-align: left;
+    word-wrap: break-word;
+    font-size: 24px;
+
+}
+
+#txt{
+    width: 100%;
+}
+.date{
+    text-align: right;
+    font-size: 14px;
+    color: gray;
+}
+.textS{ 
+    background-color: #E0E0E0;
+   
+}
+.textC{
+    background-color: #F0F0F0;
+}
