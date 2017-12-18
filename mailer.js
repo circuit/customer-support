@@ -4,12 +4,15 @@ const config = require('./config.json');
 let smtpTransport = nodemailer.createTransport(config.email.nodemailer);
 
 function sendInitialMsg(complaint) {
+  
   send({
       from: config.email.sender, // This will not work with gmail. The email from auth will be used.
       to: complaint.customer.email,
       subject: 'Customer Complaint accepted',
-      html: `Hi ${complaint.customer.name},<br><br>Thank you for contacting us. We will get back to you within 24 hours.<br><br>Company xyz`
+      html: `Hi ${complaint.customer.name},<br><br>Thank you for contacting us. We will get back to you within 24 hours.<br><br>Company xyz <br>You can also view the whole conversation <a href=\"${config.host}/complaint/?id=${complaint.complaintId}\">here</a>.<br><br>Company xyz`
   });
+
+ 
 }
 
 function sendUpdate(complaint, msg, complaintId) {

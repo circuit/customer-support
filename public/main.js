@@ -14,16 +14,18 @@ document.addEventListener('DOMContentLoaded', event => {
   function render() {
     hyperHTML.bind(app)`
     
-      <div class="jumbotron" id="formHead">
-        <h1>Customer Complaint Form</h1> 
-        <p>Please fill out your customer information below we wll as about your issue.</p> 
-      </div>
+      
 
 
 
       <div class="container" id = "inner">
         
         <form>
+        <div id="formHead">
+        <h1>Customer Complaint Form</h1> 
+        <p>Please fill out your customer information below we wll as about your issue.</p> 
+      </div>
+
           <div class="form-group">
             <label for="name">Name</label>
             <input required type="text" class="form-control" id="name" name="name" onchange="${EventListener.handleEvent}">

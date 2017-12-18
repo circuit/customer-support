@@ -47,7 +47,6 @@ io.on('connection', async socket => {
       // Create group conversation
       let conv = await circuit.createConversation(supportUserIds, data.name);
 
-      console.log('ewruiwhriewurhiweurhiweurwerihweiruhewuirhweiurhweiurhweiuh'+data.topic);
       // Create complaint in database
       let newComplaintId = complaints.length ? complaints[complaints.length - 1].complaintId + 1 : config.complaintIdStart;
       let newComplaint = {
@@ -56,14 +55,16 @@ io.on('connection', async socket => {
         customer: {
           name: data.name,
           email: data.email,
-          topic: data.topic,
+          topic: data.topic
+          
         }
       }
 
+      
       // Post initial message which creates the thread for customer communication
       await circuit.sendMessage(conv.convId, {
         subject: `New complaint: ${newComplaintId}`,
-        content: `Name: ${data.name}<br>Email: <a href="${data.email}">${data.email}</a><br>Topic: ${data.topic}<br> Other:${data.other}`
+        content: `Name: ${data.name}<br>Email: <a href="${data.email}">${data.email}</a><br>Topic: ${data.topic}<br>`
       });
 
       // Post initial complaint message. This will become the communication thread with the customer
@@ -146,6 +147,31 @@ io.on('connection', async socket => {
     // Send email to customer notifying of update
     mailer.sendUpdate(complaint, data.message, complaint.complaintId);
   });
+
+});
+
+emitter.on('thread-updated', async data => {
+
+  const complaint = complaints.find(c => c.convId === data.convId);
+
+  if (!complaint) {
+    console.error(`No complaint found in DB for convId: ${data.convId}`);
+    return;
+  }
+  
+  if (complaint.thread !== data.thread) {
+    console.error('Message on a internal thread. Skip it.');
+    return;
+  }
+
+  if (data.fromCustomer) {
+    // Complaint page is already updated locally in browser
+    // Might want to send an email to customer letting him/her know
+    // that reply was recevied.
+    return;
+  }
+
+  socket.emit('thread-updated');
 
 });
 

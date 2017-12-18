@@ -20,9 +20,7 @@ document.addEventListener('DOMContentLoaded', event => {
         Customer email: ${model.complaint.customer.email}</p>
         ${model.messages.map(m =>
         `<div id="section" class="msg msg-${m.fromCustomer ? 'customer' : 'company'}">
-          <div class= "${m.fromCustomer ? "textC" : "textS"}"><em>${m.fromCustomer ? 'You' : 'Support'}: </em>${m.content}</div>
-          <small><div class="date">${moment(m.timestamp).format('llll')}</div></small>
-          <br>
+          <div class= "${m.fromCustomer ? "textC" : "textS"}"><em>${m.fromCustomer ? 'You' : 'Support'}: </em>${m.content}<small><div class="date">${moment(m.timestamp).format('llll')}</div></small></div>
         </div>`)}
         <h5>Post new message:</h5>
         <textarea cols="60" rows="3" id = "txt" name="message" onchange="${EventListener.handleEvent}" placeholder="Enter message"></textarea>
@@ -51,7 +49,6 @@ document.addEventListener('DOMContentLoaded', event => {
 
   // Render complaint page after getting its data from server
   socket.on('get-complaint-response', data => {
-    debugger;
     model = data;
     renderComplaint();
   });
@@ -64,6 +61,11 @@ document.addEventListener('DOMContentLoaded', event => {
     });
     renderComplaint();
   });
+  socket.on('thread-updated', () => {
+    
+   socket.emit('get-complaint', Number(id));
+  });
+
 
   socket.on();
 

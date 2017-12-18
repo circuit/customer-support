@@ -72,6 +72,19 @@ function setupListeners() {
         fromCustomer: evt.item.creatorId === appUserId
       });
     });
+
+    client.addEventListener('itemUpdated', evt => {
+      // Raise text messages for further processing
+      console.log(evt);
+      if (!evt.item.text) {
+        // not a text message
+        return;
+      }
+      emitter.emit('thread-updated', {
+        convId: evt.item.convId,
+        thread: evt.item.parentItemId || evt.item.itemId
+      });
+    });
 }
 
 Circuit.Injectors.itemInjector = function (item) {
