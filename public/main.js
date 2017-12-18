@@ -27,15 +27,15 @@ document.addEventListener('DOMContentLoaded', event => {
       </div>
 
           <div class="form-group">
-            <label for="name">Name</label>
-            <input required type="text" class="form-control" id="name" name="name" onchange="${EventListener.handleEvent}">
+            <label for="name" id="headings">Name: </label>
+            <input required type="text" class="form-control" id="name" name="name" placeholder="John Smith" onchange="${EventListener.handleEvent}">
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
-            <input required type="email" class="form-control" id="email" name="email" onchange="${EventListener.handleEvent}">
+            <label for="email" id="headings">Email: </label>
+            <input required type="email" class="form-control" id="email" placeholder="johnsmith123@gmail.com" name="email" onchange="${EventListener.handleEvent}">
           </div>
           <div class="form-group">
-           <label for="sel1">Select an Issue:</label>
+           <label for="sel1" id="headings">Select an Issue: </label>
             <select class="form-control" id="topic" name ="topic" onchange="${EventListener.handleEvent}">
               <option>Select</option>
               <option value = "Washing Machine">Washing Machine</option>
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', event => {
             </select>
           </div>
           <div class="form-group">
-            <label for="message">Message</label>
+            <label for="message" id="headings">Message: </label>
             <textarea class="form-control" required rows="5" placeholder= "Please provide any relevant information here..." type="text" id="message" name="message" onchange="${EventListener.handleEvent}"></textarea>
           </div>
           <button type="submit" class="btn btn-primary" onclick="${createComplaint}">Submit</button>

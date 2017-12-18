@@ -21,11 +21,19 @@
 }
 .textS{ 
     background-color: #E0E0E0;
+    font-size: 18px;
+    padding: 20px;
    
 }
 .textC{
     background-color: #D3D3D3;
+    font-size: 18px;
+    border: 10%;
 }
 #formHead{
     text-align: center;
+}
+#headings{
+    font-size: 14px;
+    
 }

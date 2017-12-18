@@ -21,8 +21,7 @@ document.addEventListener('DOMContentLoaded', event => {
         ${model.messages.map(m =>
         `<div id="section" class="msg msg-${m.fromCustomer ? 'customer' : 'company'}">
           <div class= "${m.fromCustomer ? "textC" : "textS"}"><em>${m.fromCustomer ? 'You' : 'Support'}: </em>${m.content}<small><div class="date">${moment(m.timestamp).format('llll')}</div></small></div>
-        </div>`)}
-        <h5>Post new message:</h5>
+        </div>`)} <br>
         <textarea cols="60" rows="3" id = "txt" name="message" onchange="${EventListener.handleEvent}" placeholder="Enter message"></textarea>
         <div><button type="button" class="btn btn-primary" onclick="${newMessage}">Submit</button></div>
       </div>`;
@@ -61,9 +60,10 @@ document.addEventListener('DOMContentLoaded', event => {
     });
     renderComplaint();
   });
-  socket.on('thread-updated', () => {
+  socket.on('thread-updated', (id) => {
     
    socket.emit('get-complaint', Number(id));
+
   });
 
 
