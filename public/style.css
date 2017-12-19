@@ -15,30 +15,54 @@
 #txt{
     width: 100%;
 }
-.date{
+.dateS{
     text-align: right;
     font-size: 14px;
     color: gray;
     padding: 0 10px 0 0;
+    float: right;
+    clear: both;
+    
+}
+.dateC{
+    font-size: 14px;
+    color: gray;
+    padding: 0 10px 0 0;
+    clear: both;
+    
 }
 .textS{ 
     background-color: #E0E0E0;
     font-size: 18px;
-    margin: 5px 0 5px 0;
-    padding: 4px 5px 0 10px;
+    margin: 5px 0 5px auto;
+    padding: 5px 20px 5px 20px;
     border-radius: 20px;
-    display: inline-block;
     word-wrap: break-word;
-   
+    width: auto;
+    float: right;
+    clear: both;
+    
+      
 }
 .textC{
     background-color: rgba(194, 195, 187, 0.87);
     font-size: 18px;
-    margin: 5px 0 5px 0;
-    padding: 4px 5px 0 10px;
+    margin: 5px 40% 5px 0;
+    padding: 5px 20px 5px 20px;
     border-radius: 20px;
     display: inline-block;
+    word-wrap: break-word;
+
+}
+#supp{
+    float: right;
+    clear: both;
+    font-size: 16px;
+    padding-right: 20px;
     
+}
+#nul{
+    font-size: 16px;
 }
 #formHead{
     text-align: center;
@@ -48,4 +72,5 @@
 }
 .chat{
     width: 100%;
+    
 }
