@@ -34,7 +34,7 @@
 .textS{ 
     background-color: #E0E0E0;
     font-size: 18px;
-    margin: 5px 0 5px auto;
+    margin: 5px 10% 5px 0;
     padding: 5px 20px 5px 20px;
     border-radius: 20px;
     word-wrap: break-word;
@@ -58,7 +58,7 @@
     float: right;
     clear: both;
     font-size: 16px;
-    padding-right: 20px;
+    padding-right: 20%;
     
 }
 #nul{
