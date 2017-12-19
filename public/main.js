@@ -58,9 +58,15 @@ document.addEventListener('DOMContentLoaded', event => {
   }
 
   function createComplaint(e) {
-    e.preventDefault();
-    console.log(`Submit new complaint for ${model.name}`, model);
-    socket.emit('new-complaint', model);
+
+    if(model.name == undefined || model.email == undefined || model.topic == undefined || model.message == undefined){
+      alert('Not all fields are filled in, please fill in the required information');
+    }
+    else{
+      e.preventDefault();
+      console.log(`Submit new complaint for ${model.name}`, model);
+      socket.emit('new-complaint', model);
+    }
   }
 
   socket.on('disconnect', () => console.error('Socket has disconnected'));

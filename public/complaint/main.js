@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', event => {
   function renderComplaint() {
     hyperHTML.bind(app)`
       <div class="container" id = "inner">
-        <h2>Customer Complaint</h2>
-        <p>Reference Number: <span id="complaintId">${model.complaint.complaintId}</span><br>
+        <h1>Customer Complaint</h1>
+        <p id = "innerp">Reference Number: <span id="complaintId">${model.complaint.complaintId}</span><br>
         Customer name: ${model.complaint.customer.name}<br>
         Customer email: ${model.complaint.customer.email}</p>
         ${model.messages.map(m =>

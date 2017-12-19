@@ -5,13 +5,13 @@
     text-align: left;
     word-wrap: break-word;
     font-size: 24px;
-    
     align-self: center;
     margin: auto;
 
 }
-#section{
-    
+#innerp{
+    font-size: 24px;
+    padding: 1px 5px 0 5px;
 }
 #txt{
     width: 100%;
@@ -30,7 +30,7 @@
    
 }
 .textC{
-    background-color: rgba(193, 194, 187, 0.911);
+    background-color: rgba(194, 195, 187, 0.87);
     font-size: 18px;
     margin: 5px 0 5px 0;
     padding: 1px 5px 0 5px;
