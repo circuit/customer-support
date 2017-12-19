@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', event => {
         <form>
         <div id="formHead">
         <h1>Customer Complaint Form</h1> 
-        <p>Please fill out your customer information below and we will assist you shortly.</p> 
+        <p>Please fill out your customer information below.</p> 
       </div>
 
           <div class="form-group">
@@ -60,7 +60,23 @@ document.addEventListener('DOMContentLoaded', event => {
   function createComplaint(e) {
 
     if(model.name == undefined || model.email == undefined || model.topic == undefined || model.message == undefined){
-      alert('Not all fields are filled in, please fill in the required information');
+  
+      let resp = "";
+
+      if(model.name == undefined){
+        resp+="**Name** is empty, please fill in your name. \n\n";
+      }
+      if(model.email == undefined){
+        resp+="**Email** is empty, please fill in your email adress. \n\n";
+      }
+      if(model.topic == undefined){
+        resp+="**Issue** You did not select a relevant issue, please select **other** if you're having a different problem not listed.\n\n";
+      }
+      if(model.message == undefined){
+        resp+=" **Message** Please fill out a message decribing your issue.\n\n";
+      }
+
+      alert(resp);
     }
     else{
       e.preventDefault();

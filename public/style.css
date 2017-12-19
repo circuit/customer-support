@@ -20,12 +20,14 @@
     text-align: right;
     font-size: 14px;
     color: gray;
+    padding: 0 10px 0 0;
 }
 .textS{ 
     background-color: #E0E0E0;
     font-size: 18px;
     margin: 5px 0 5px 0;
-    padding: 1px 5px 0 5px;
+    padding: 4px 5px 0 10px;
+    border-radius: 25px;
     
    
 }
@@ -33,7 +35,8 @@
     background-color: rgba(194, 195, 187, 0.87);
     font-size: 18px;
     margin: 5px 0 5px 0;
-    padding: 1px 5px 0 5px;
+    padding: 4px 5px 0 10px;
+    border-radius: 25px;
 }
 #formHead{
     text-align: center;
