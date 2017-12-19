@@ -10,7 +10,9 @@
     margin: auto;
 
 }
-
+#section{
+    
+}
 #txt{
     width: 100%;
 }
@@ -22,18 +24,20 @@
 .textS{ 
     background-color: #E0E0E0;
     font-size: 18px;
-    padding: 20px;
+    margin: 5px 0 5px 0;
+    padding: 1px 5px 0 5px;
+    
    
 }
 .textC{
-    background-color: #D3D3D3;
+    background-color: rgba(193, 194, 187, 0.911);
     font-size: 18px;
-    border: 10%;
+    margin: 5px 0 5px 0;
+    padding: 1px 5px 0 5px;
 }
 #formHead{
     text-align: center;
 }
 #headings{
-    font-size: 14px;
-    
+    font-size: 14px;   
 }

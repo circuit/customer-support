@@ -37,7 +37,7 @@ function getMessages(convId, threadId) {
   return new Promise((resolve, reject) => {
     let res = [];
     client.getItemById(threadId)
-  //    .then(item => res.push(item))
+      //.then(item => res.push(item))
       .then(() => client.getItemsByThread(convId, threadId, { number: -1 }))
       .then(resp => res.push(...resp.items))
       .then(() => {

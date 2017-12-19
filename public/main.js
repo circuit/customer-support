@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', event => {
         <form>
         <div id="formHead">
         <h1>Customer Complaint Form</h1> 
-        <p>Please fill out your customer information below we wll as about your issue.</p> 
+        <p>Please fill out your customer information below and we will assist you shortly.</p> 
       </div>
 
           <div class="form-group">

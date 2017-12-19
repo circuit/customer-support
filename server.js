@@ -148,32 +148,33 @@ io.on('connection', async socket => {
     mailer.sendUpdate(complaint, data.message, complaint.complaintId);
   });
 
-});
-
-emitter.on('thread-updated', async data => {
-
-  const complaint = complaints.find(c => c.convId === data.convId);
-
-  if (!complaint) {
-    console.error(`No complaint found in DB for convId: ${data.convId}`);
-    return;
-  }
+  emitter.on('thread-updated', async data => {
+    
+    const complaint = complaints.find(c => c.convId === data.convId);
   
-  if (complaint.thread !== data.thread) {
-    console.error('Message on a internal thread. Skip it.');
-    return;
-  }
-
-  if (data.fromCustomer) {
-    // Complaint page is already updated locally in browser
-    // Might want to send an email to customer letting him/her know
-    // that reply was recevied.
-    return;
-  }
-
-  socket.emit('thread-updated');
-
+    if (!complaint) {
+      console.error(`No complaint found in DB for convId: ${data.convId}`);
+      return;
+    }
+    
+    if (complaint.thread !== data.thread) {
+      console.error('Message on a internal thread. Skip it.');
+      return;
+    }
+  
+    if (data.fromCustomer) {
+      // Complaint page is already updated locally in browser
+      // Might want to send an email to customer letting him/her know
+      // that reply was recevied.
+      return;
+    }
+  
+    socket.emit('thread-updated');
+  
+  });
 });
+
+
 
 
 server.listen(port, _ => console.log(`Server listening at port ${port}`));
