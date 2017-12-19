@@ -7,13 +7,16 @@
     font-size: 24px;
     align-self: center;
     margin: auto;
+    clear: both;
 }
 #innerp{
     font-size: 24px;
     padding: 1px 5px 0 5px;
+    clear: both;
 }
 #txt{
     width: 100%;
+    clear: both;
 }
 .dateS{
     text-align: right;
@@ -34,10 +37,11 @@
 .textS{ 
     background-color: #E0E0E0;
     font-size: 18px;
-    margin: 5px 10% 5px 0;
+    margin: 5px 1% 5px 30%;
     padding: 5px 20px 5px 20px;
     border-radius: 20px;
     word-wrap: break-word;
+    word-break: break-all;
     width: auto;
     float: right;
     clear: both;
@@ -52,13 +56,15 @@
     border-radius: 20px;
     display: inline-block;
     word-wrap: break-word;
+    word-break: break-all;
+    clear: both;
 
 }
 #supp{
     float: right;
     clear: both;
     font-size: 16px;
-    padding-right: 20%;
+    padding-right: 10px;
     
 }
 #nul{
@@ -72,5 +78,6 @@
 }
 .chat{
     width: 100%;
+    clear: both;
     
 }

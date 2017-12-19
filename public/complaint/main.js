@@ -17,13 +17,14 @@ document.addEventListener('DOMContentLoaded', event => {
         <h1>Customer Complaint</h1>
         <p id = "innerp">Reference Number: <span id="complaintId">${model.complaint.complaintId}</span><br>
         Customer name: ${model.complaint.customer.name}<br>
-        Customer email: ${model.complaint.customer.email}</p>
+        Customer email: ${model.complaint.customer.email}<br>
+        Topic: ${model.complaint.customer.topic}</p>
         ${model.messages.map(m =>
         `<div id="section" class="msg msg-${m.fromCustomer ? 'customer' : 'company'}">
-          <div><em id = "${m.fromCustomer ? 'nul' : 'supp'}"><small>${m.fromCustomer ? 'You' : 'Support'}:</small><br> </em><div class = "chat"><div class= "${m.fromCustomer ? "textC" : "textS"}">${m.content}<small></div><div class= ${m.fromCustomer ? "dateC" : "dateS"}>${moment(m.timestamp).format('llll')}</div></small>
+          <div><em id = "${m.fromCustomer ? 'nul' : 'supp'}"><small>${m.fromCustomer ? 'You' : 'Support'}:</small></em><div class = "chat"><div class= "${m.fromCustomer ? "textC" : "textS"}">${m.content}<small></div><div class= ${m.fromCustomer ? "dateC" : "dateS"}>${moment(m.timestamp).format('llll')}</div></small>
         `)} <br>
-        <textarea cols="60" rows="3" id = "txt" name="message" onchange="${EventListener.handleEvent}" placeholder="Enter message"></textarea>
-        <div><button type="button" class="btn btn-primary" onclick="${newMessage}">Submit</button></div>
+        <textarea cols="60" rows="3" id = "txt" name="message" onchange="${EventListener.handleEvent}" placeholder="Enter a message"></textarea>
+        <div><button type="button" class="btn btn-primary" onclick="${newMessage}">Submit</button></div><br>
       </div>`;
   }
 
