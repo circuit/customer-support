@@ -7,7 +7,6 @@
     font-size: 24px;
     align-self: center;
     margin: auto;
-
 }
 #innerp{
     font-size: 24px;
@@ -27,8 +26,9 @@
     font-size: 18px;
     margin: 5px 0 5px 0;
     padding: 4px 5px 0 10px;
-    border-radius: 25px;
-    
+    border-radius: 20px;
+    display: inline-block;
+    word-wrap: break-word;
    
 }
 .textC{
@@ -36,11 +36,16 @@
     font-size: 18px;
     margin: 5px 0 5px 0;
     padding: 4px 5px 0 10px;
-    border-radius: 25px;
+    border-radius: 20px;
+    display: inline-block;
+    
 }
 #formHead{
     text-align: center;
 }
 #headings{
     font-size: 14px;   
+}
+.chat{
+    width: 100%;
 }

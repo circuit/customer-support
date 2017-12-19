@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', event => {
         Customer email: ${model.complaint.customer.email}</p>
         ${model.messages.map(m =>
         `<div id="section" class="msg msg-${m.fromCustomer ? 'customer' : 'company'}">
-          <div class= "${m.fromCustomer ? "textC" : "textS"}"><em>${m.fromCustomer ? 'You' : 'Support'}: </em>${m.content}<small><div class="date">${moment(m.timestamp).format('llll')}</div></small></div>
-        </div>`)} <br>
+          <div><em><small>${m.fromCustomer ? 'You' : 'Support'}:</small><br> </em><div class = "chat"><div class= "${m.fromCustomer ? "textC" : "textS"}">${m.content}<small></div></div><div class="date">${moment(m.timestamp).format('llll')}</div></small>
+        `)} <br>
         <textarea cols="60" rows="3" id = "txt" name="message" onchange="${EventListener.handleEvent}" placeholder="Enter message"></textarea>
         <div><button type="button" class="btn btn-primary" onclick="${newMessage}">Submit</button></div>
       </div>`;
