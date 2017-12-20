@@ -29,20 +29,25 @@ document.addEventListener('DOMContentLoaded', event => {
   }
 
   function newMessage() {
-    console.log(`Submit message for complaint ${model.name}`, model);
-    socket.emit('new-message', {
-      complaintId: Number(document.getElementById('complaintId').innerText),
-      message: model.message
-    });
+    
+    if(model.message != undefined){
+      console.log(`Submit message for complaint ${model.name}`, model);
+      socket.emit('new-message', {
+        complaintId: Number(document.getElementById('complaintId').innerText),
+        message: model.message
+      });
+  
+      model.messages.push({
+        fromCustomer: true,
+        content: model.message,
+        timestamp: Date.now()
+      });
+      renderComplaint();
+  
+      document.querySelector('textarea[name="message"]').value = '';
+    }
 
-    model.messages.push({
-      fromCustomer: true,
-      content: model.message,
-      timestamp: Date.now()
-    });
-    renderComplaint();
-
-    document.querySelector('textarea[name="message"]').value = '';
+    model.message = undefined;
   }
 
   socket.on('disconnect', () => console.error('Socket has disconnected'));
@@ -62,11 +67,8 @@ document.addEventListener('DOMContentLoaded', event => {
     renderComplaint();
   });
 
-  socket.on('thread-updated', () => {
-  
+  socket.on('thread-updated', () => {  
    socket.emit('get-complaint', Number(id));
-   
-
   });
 
 
