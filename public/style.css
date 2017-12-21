@@ -1,40 +1,45 @@
 
-#inner{
+body {
+    font-size: 18px;
+}
+
+#inner {
     width: 50%;
     padding: 0;
     text-align: left;
     word-wrap: break-word;
-    font-size: 24px;
     align-self: center;
     margin: auto;
     clear: both;
 }
-#innerp{
-    font-size: 24px;
-    padding: 1px 5px 0 5px;
+
+#innerp {
     clear: both;
 }
-#txt{
+
+#txt {
     width: 100%;
     clear: both;
 }
-.dateS{
+
+.dateS {
     text-align: right;
     font-size: 14px;
     color: gray;
     padding: 0 10px 0 0;
     float: right;
     clear: both;
-    
 }
-.dateC{
+
+.dateC {
     font-size: 14px;
     color: gray;
     padding: 0 10px 0 0;
     clear: both;
-    
+
 }
-.textS{ 
+
+.textS {
     background-color: rgb(245, 165, 165);
     font-size: 18px;
     margin: 5px 1% 5px 30%;
@@ -45,10 +50,9 @@
     width: auto;
     float: right;
     clear: both;
-    
-      
 }
-.textC{
+
+.textC {
     background-color: rgba(194, 195, 187, 0.87);
     font-size: 18px;
     margin: 5px 40% 5px 0;
@@ -58,28 +62,35 @@
     word-wrap: break-word;
     word-break: break-all;
     clear: both;
-
 }
-#supp{
+
+#supp {
     float: right;
     clear: both;
     font-size: 16px;
     padding-right: 10px;
-    
 }
-#nul{
-    float: left; 
+
+#nul {
+    float: left;
     clear: both;
     font-size: 16px;
 }
-#formHead{
+
+#formHead {
     text-align: center;
 }
-#headings{
-    font-size: 14px;   
+
+#headings {
+    font-size: 14px;
 }
-.chat{
+
+.chat {
     width: 100%;
     clear: both;
-    
+}
+
+textarea {
+    margin-top: 20px;
+    font-size: 18px;
 }
