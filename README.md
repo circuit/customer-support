@@ -12,7 +12,6 @@ Customer complaint system using Circuit for communication
 1. Similarly the customer can post to to the complaint page, and messages are posted to the conversation
 
 ## Future enhancements
-* Add topic dropdown in form with predefined topics in config
 * Allow customer to upload files/images and post them to conversation
 * Set conversation avatar (missing in SDK)
 * Set a 'complaints' label on conversation

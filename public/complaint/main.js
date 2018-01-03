@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', event => {
     hyperHTML.bind(app)`
       <div class="container" id = "inner">
         <h1>Customer Complaint</h1>
-        <p id = "innerp">Reference Number: <span id="complaintId">${model.complaint.complaintId}</span><br>
-        Customer name: ${model.complaint.customer.name}<br>
-        Customer email: ${model.complaint.customer.email}<br>
-        Topic: ${model.complaint.customer.topic}</p>
+        <p id = "innerp">Reference Number: <b><span id="complaintId">${model.complaint.complaintId}</span></b><br>
+        Customer name: <b>${model.complaint.customer.name}</b><br>
+        Customer email: <b>${model.complaint.customer.email}</b><br>
+        Topic: <b>${model.complaint.customer.topic}</b></p>
         ${model.messages.map(m =>
         `<div id="section" class="msg msg-${m.fromCustomer ? 'customer' : 'company'}">
           <div><em id = "${m.fromCustomer ? 'nul' : 'supp'}"><small>${m.fromCustomer ? 'You' : 'Support'}:</small></em><div class = "chat"><div class= "${m.fromCustomer ? "textC" : "textS"}">${m.content}<small></div><div class= ${m.fromCustomer ? "dateC" : "dateS"}>${moment(m.timestamp).format('llll')}</div></small>
@@ -29,25 +29,25 @@ document.addEventListener('DOMContentLoaded', event => {
   }
 
   function newMessage() {
-    
-    if(model.message != undefined){
-      console.log(`Submit message for complaint ${model.name}`, model);
-      socket.emit('new-message', {
-        complaintId: Number(document.getElementById('complaintId').innerText),
-        message: model.message
-      });
-  
-      model.messages.push({
-        fromCustomer: true,
-        content: model.message,
-        timestamp: Date.now()
-      });
-      renderComplaint();
-  
-      document.querySelector('textarea[name="message"]').value = '';
+    if (!model.message) {
+      return;
     }
 
-    model.message = undefined;
+    console.log(`Submit message for complaint ${model.name}`, model);
+    socket.emit('new-message', {
+      complaintId: Number(document.getElementById('complaintId').innerText),
+      message: model.message
+    });
+
+    model.messages.push({
+      fromCustomer: true,
+      content: model.message,
+      timestamp: Date.now()
+    });
+    renderComplaint();
+
+    document.querySelector('textarea[name="message"]').value = '';
+    model.message = '';
   }
 
   socket.on('disconnect', () => console.error('Socket has disconnected'));
@@ -67,12 +67,9 @@ document.addEventListener('DOMContentLoaded', event => {
     renderComplaint();
   });
 
-  socket.on('thread-updated', () => {  
+  socket.on('thread-updated', () => {
    socket.emit('get-complaint', Number(id));
   });
-
-
-  socket.on();
 
   const id = location.search.substring(location.search.indexOf('id=') + 3)
   socket.emit('get-complaint', Number(id));
