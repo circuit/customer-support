@@ -20,7 +20,7 @@ function sendUpdate(complaint, msg, complaintId) {
       from: config.email.sender, // This will not work with gmail. The email from auth will be used.
       to: complaint.customer.email,
       subject: 'Customer Support has replied',
-      html: `Hi ${complaint.customer.name},<br><br>Your complaint has been updated.<br><br><i>${msg}</i><br><br>You can also view the whole conversation <a href=\"${config.host}/complaint/?id=${complaintId}\">here</a>.<br><br>Company xyz`
+      html: `Hi ${complaint.customer.name},<br><br>Your complaint has been updated.<br><br><i>${msg}</i><br><br>You can also view the whole conversation <a href=\"${config.host}/complaint/?id=${complaint.complaintId}\">here</a>.<br><br>Company xyz`
   });
 }
 

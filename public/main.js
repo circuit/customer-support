@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', event => {
         resp+="**Issue** You did not select a relevant issue, please select **other** if you're having a different problem not listed.\n\n";
       }
       if(model.message == undefined){
-        resp+=" **Message** Please fill out a message decribing your issue.\n\n";
+        resp+="**Message** Please fill out a message decribing your issue.\n\n";
       }
 
       alert(resp);

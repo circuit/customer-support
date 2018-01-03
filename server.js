@@ -143,9 +143,7 @@ io.on('connection', async socket => {
 
     // Send an event to the UI with the new message and append the new message
     socket.emit('new-support-message', data);
-
-    // Send email to customer notifying of update
-    mailer.sendUpdate(complaint, data.message, complaint.complaintId);
+    
   });
 
   emitter.on('thread-updated', async data => {
@@ -172,6 +170,30 @@ io.on('connection', async socket => {
     socket.emit('thread-updated');
   
   });
+});
+
+emitter.on('message-received', async data => {
+  const complaint = complaints.find(c => c.convId === data.convId);
+  if (!complaint) {
+    console.error(`No complaint found in DB for convId: ${data.convId}`);
+    return;
+  }
+  if (complaint.thread !== data.thread) {
+    console.error('Message on a internal thread. Skip it.');
+    return;
+  }
+
+  if (data.fromCustomer) {
+    // Complaint page is already updated locally in browser
+    // Might want to send an email to customer letting him/her know
+    // that reply was recevied.
+    return;
+  }
+
+  // Send email to customer notifying of update
+  mailer.sendUpdate(complaint, data.message, complaint.complaintId);
+  
+  
 });
 
 
