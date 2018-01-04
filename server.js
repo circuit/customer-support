@@ -28,12 +28,42 @@ const exists = fs.existsSync(db);
 !exists && fs.writeFileSync(db, '[]');
 const complaints = jsonfile.readFileSync(db);
 
+// Lookup complaint and verify its for the public thread and
+// sent by the support team
+function getComplaint(data) {
+  const complaint = complaints.find(c => c.convId === data.convId);
+  if (!complaint) {
+    console.error(`No complaint found in DB for convId: ${data.convId}`);
+    return;
+  }
+  if (complaint.thread !== data.thread) {
+    console.error('Message on a internal thread. Skip it.');
+    return;
+  }
+  if (data.fromCustomer) {
+    // Complaint page is already updated locally in browser
+    // Might want to send an email to customer letting him/her know
+    // that reply was recevied.
+    return;
+  }
+  return complaint;
+}
+
 // Initialize Circuit API
 circuit.init(emitter)
   .then(() => circuit.getUsersByEmail(config.supportUsers))
   .then(users =>
     supportUserIds = users.map(user => user.userId))
   .catch(console.error);
+
+// Email support message to customer
+emitter.on('message-received', async data => {
+  let complaint = getComplaint(data);
+  if (complaint) {
+    // Send email to customer notifying of update
+    mailer.sendUpdate(complaint, data.message, complaint.complaintId);
+  }
+});
 
 // Client socket.io connections
 io.on('connection', async socket => {
@@ -56,11 +86,9 @@ io.on('connection', async socket => {
           name: data.name,
           email: data.email,
           topic: data.topic
-          
         }
       }
 
-      
       // Post initial message which creates the thread for customer communication
       await circuit.sendMessage(conv.convId, {
         subject: `New complaint: ${newComplaintId}`,
@@ -76,7 +104,7 @@ io.on('connection', async socket => {
       // Save threadId in db. Subsequent messages to/from customer go into this thread
       newComplaint.thread = customerThread.itemId;
       complaints.push(newComplaint)
-      jsonfile.writeFile(db, complaints, {spaces: 2}, err => {
+      jsonfile.writeFile(db, complaints, { spaces: 2 }, err => {
         if (err) {
           console.error('Error updating the complaint database', err);
           return;
@@ -86,7 +114,6 @@ io.on('connection', async socket => {
 
       // Send email to customer
       mailer.sendInitialMsg(newComplaint);
-
     } catch (err) {
       console.error('Error creating new complaint', err);
     }
@@ -124,56 +151,17 @@ io.on('connection', async socket => {
   // the public communication thread not sent by the customer (bot user)
   // Then update the UI (in case its page it open) and send email to customer.
   emitter.on('message-received', async data => {
-    const complaint = complaints.find(c => c.convId === data.convId);
-
-    if( dataCheck(data, complaint) === true){
+    if (getComplaint(data)) {
       // Send an event to the UI with the new message and append the new message
       socket.emit('new-support-message', data);
     }
   });
 
   emitter.on('thread-updated', async data => {
-    
-    const complaint = complaints.find(c => c.convId === data.convId);
-  
-    if( dataCheck(data, complaint) === true){
+    if (getComplaint(data)) {
       socket.emit('thread-updated');
     }
-  
   });
 });
-
-emitter.on('message-received', async data => {
-
-  const complaint = complaints.find(c => c.convId === data.convId);
-  if( dataCheck(data, complaint) === true){
-    // Send email to customer notifying of update
-    mailer.sendUpdate(complaint, data.message, complaint.complaintId);
-  } 
-});
-
-function dataCheck(data, complaint){
-
-
-  if (!complaint) {
-    console.error(`No complaint found in DB for convId: ${data.convId}`);
-    return false;
-  }
-  if (complaint.thread !== data.thread) {
-    console.error('Message on a internal thread. Skip it.');
-    return false;
-  }
-
-  if (data.fromCustomer) {
-    // Complaint page is already updated locally in browser
-    // Might want to send an email to customer letting him/her know
-    // that reply was recevied.
-    return false;
-  }
-
-  return true;
-
-}
-
 
 server.listen(port, _ => console.log(`Server listening at port ${port}`));
