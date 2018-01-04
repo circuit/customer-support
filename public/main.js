@@ -48,26 +48,6 @@ document.addEventListener('DOMContentLoaded', event => {
   }
 
   function createComplaint(e) {
-<<<<<<< HEAD
-
-    if(model.name == undefined || model.email == undefined || model.topic == undefined || model.message == undefined){
-  
-      let resp = "";
-
-      if(model.name == undefined){
-        resp+="**Name** is empty, please fill in your name. \n\n";
-      }
-      if(model.email == undefined){
-        resp+="**Email** is empty, please fill in your email adress. \n\n";
-      }
-      if(model.topic == undefined){
-        resp+="**Issue** You did not select a relevant issue, please select **other** if you're having a different problem not listed.\n\n";
-      }
-      if(model.message == undefined){
-        resp+="**Message** Please fill out a message decribing your issue.\n\n";
-      }
-
-=======
     e.preventDefault();
 
     if (!model.name || !model.email || !model.topic || !model.message) {
@@ -76,7 +56,6 @@ document.addEventListener('DOMContentLoaded', event => {
       !model.email && (resp += 'Please fill in your email adress. \n\n');
       !model.topic && (resp += `You did not select a relevant issue, please select **other** if you're having a different problem not listed.\n\n`);
       !model.message && (resp += 'Please fill out a message decribing your issue.\n\n');
->>>>>>> e707d85aa52167100430da7f0f9237421af08b6e
       alert(resp);
       return;
     }
