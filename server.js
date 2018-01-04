@@ -125,77 +125,55 @@ io.on('connection', async socket => {
   // Then update the UI (in case its page it open) and send email to customer.
   emitter.on('message-received', async data => {
     const complaint = complaints.find(c => c.convId === data.convId);
-    if (!complaint) {
-      console.error(`No complaint found in DB for convId: ${data.convId}`);
-      return;
-    }
-    if (complaint.thread !== data.thread) {
-      console.error('Message on a internal thread. Skip it.');
-      return;
-    }
 
-    if (data.fromCustomer) {
-      // Complaint page is already updated locally in browser
-      // Might want to send an email to customer letting him/her know
-      // that reply was recevied.
-      return;
+    if( dataCheck(data, complaint) === true){
+      // Send an event to the UI with the new message and append the new message
+      socket.emit('new-support-message', data);
     }
-
-    // Send an event to the UI with the new message and append the new message
-    socket.emit('new-support-message', data);
-    
   });
 
   emitter.on('thread-updated', async data => {
     
     const complaint = complaints.find(c => c.convId === data.convId);
   
-    if (!complaint) {
-      console.error(`No complaint found in DB for convId: ${data.convId}`);
-      return;
+    if( dataCheck(data, complaint) === true){
+      socket.emit('thread-updated');
     }
-    
-    if (complaint.thread !== data.thread) {
-      console.error('Message on a internal thread. Skip it.');
-      return;
-    }
-  
-    if (data.fromCustomer) {
-      // Complaint page is already updated locally in browser
-      // Might want to send an email to customer letting him/her know
-      // that reply was recevied.
-      return;
-    }
-  
-    socket.emit('thread-updated');
   
   });
 });
 
 emitter.on('message-received', async data => {
+
   const complaint = complaints.find(c => c.convId === data.convId);
+  if( dataCheck(data, complaint) === true){
+    // Send email to customer notifying of update
+    mailer.sendUpdate(complaint, data.message, complaint.complaintId);
+  } 
+});
+
+function dataCheck(data, complaint){
+
+
   if (!complaint) {
     console.error(`No complaint found in DB for convId: ${data.convId}`);
-    return;
+    return false;
   }
   if (complaint.thread !== data.thread) {
     console.error('Message on a internal thread. Skip it.');
-    return;
+    return false;
   }
 
   if (data.fromCustomer) {
     // Complaint page is already updated locally in browser
     // Might want to send an email to customer letting him/her know
     // that reply was recevied.
-    return;
+    return false;
   }
 
-  // Send email to customer notifying of update
-  mailer.sendUpdate(complaint, data.message, complaint.complaintId);
-  
-  
-});
+  return true;
 
+}
 
 
 server.listen(port, _ => console.log(`Server listening at port ${port}`));
