@@ -19,7 +19,7 @@
   "homepage": "https://github.com/circuit/customer-support#readme",
   "dependencies": {
     "bootstrap": "^3.3.7",
-    "circuit-sdk": "^1.2.2200",
+    "circuit-sdk": "^1.2.6100",
     "express": "^4.16.2",
     "hyperhtml": "^1.12.5",
     "jsonfile": "^4.0.0",

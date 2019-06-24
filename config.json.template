@@ -3,7 +3,8 @@
 	"bot": {
 	  "domain": "circuitsandbox.net",
 		"client_id": "<client_id>",
-		"client_secret": "<client_secret>"
+		"client_secret": "<client_secret>",
+    "scope": "READ_USER_PROFILE,READ_CONVERSATIONS,WRITE_CONVERSATIONS,READ_USER"
 	},
   "email": {
     "nodemailer": {
