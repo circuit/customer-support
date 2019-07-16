@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/circuit/customer-support#readme",
   "dependencies": {
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "circuit-sdk": "^1.2.6100",
     "express": "^4.16.2",
     "hyperhtml": "^1.12.5",
