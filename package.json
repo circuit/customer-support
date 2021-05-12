@@ -24,7 +24,7 @@
     "hyperhtml": "^1.12.5",
     "jsonfile": "^4.0.0",
     "moment": "^2.19.3",
-    "nodemailer": "^4.4.1",
+    "nodemailer": "^6.4.16",
     "socket.io": "^2.0.4"
   }
 }
